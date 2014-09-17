@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <mapped-superclass name="FDevs\MenuBundle\Model\MenuNodeBase">
+
+        <field name="id" fieldName="id" id="true"/>
+        <field name="name" fieldName="name" type="string" unique="true" index="true"/>
+        <field name="uri" type="string"/>
+        <field name="route" type="string"/>
+        <field name="routeAbsolute" type="boolean"/>
+        <field name="display" type="boolean"/>
+        <field name="displayChildren" type="boolean"/>
+        <field name="attributes" type="hash"/>
+        <field name="childrenAttributes" type="hash"/>
+        <field name="extras" type="hash"/>
+        <field name="routeParameters" type="hash"/>
+        <field name="linkAttributes" type="hash"/>
+        <field name="labelAttributes" type="hash"/>
+
+        <embed-many target-document="FDevs\PageBundle\Model\LocaleText" field="label" fieldName="label"/>
+        <reference-many target-document="FDevs\MenuBundle\Model\Menu" simple="true" field="children" fieldName="children" mapped-by="parent"/>
+    </mapped-superclass>
+
+</doctrine-mongo-mapping>

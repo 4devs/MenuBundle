@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="FDevs\MenuBundle\Model\Menu">
+
+        <constraint name="Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique">
+            <option name="fields">name</option>
+            <option name="message">f_devs_menu.name.already_used</option>
+        </constraint>
+
+        <property name="name">
+            <constraint name="NotBlank">
+                <option name="message">f_devs_menu.name.blank</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">f_devs_menu.name.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">f_devs_menu.name.long</option>
+            </constraint>
+        </property>
+
+        <property name="parent">
+            <constraint name="FDevs\MenuBundle\Validator\Constraints\ContainsParent">
+                <option name="field">name</option>
+                <option name="message">f_devs_menu.parent.invalid</option>
+            </constraint>
+        </property>
+
+    </class>
+
+</constraint-mapping>

@@ -1,0 +1,8 @@
+f_devs_menu:
+    name:
+        already_used: The name is already used
+        blank: Please enter a name
+        short: "[-Inf,Inf]The name is too short"
+        long: "[-Inf,Inf]The name is too long"
+    parent:
+        invalid: This is not a valid value

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="f_devs_menu.menu_manager.class">FDevs\MenuBundle\Service\MenuManager</parameter>
+        <parameter key="f_devs_menu.provider.menu.class">FDevs\MenuBundle\Provider\MenuProvider</parameter>
+        <parameter key="f_devs_menu.provider.doctrine.class">FDevs\MenuBundle\Provider\DoctrineProvider</parameter>
+    </parameters>
+
+    <services>
+        <service id="f_devs_menu.menu_manager" class="%f_devs_menu.menu_manager.class%">
+            <argument type="service" id="f_devs_menu.model_manager"/>
+            <argument>%f_devs_menu.menu_class%</argument>
+        </service>
+
+        <service id="f_devs_menu.provider.doctrine" class="%f_devs_menu.provider.doctrine.class%" abstract="true"
+                 public="false">
+            <argument type="service" id="f_devs_menu.model_manager"/>
+            <argument>%f_devs_menu.menu_class%</argument>
+        </service>
+
+        <service id="f_devs_menu.provider.menu" class="%f_devs_menu.provider.menu.class%"
+                 parent="f_devs_menu.provider.doctrine" public="true">
+            <call method="setFactory">
+                <argument type="service" id="knp_menu.factory"/>
+            </call>
+            <call method="setRequest">
+                <argument type="service" id="request" on-invalid="null" strict="false"/>
+            </call>
+            <tag name="knp_menu.provider"/>
+        </service>
+
+    </services>
+</container>
