@@ -1,0 +1,8 @@
+f_devs_menu:
+    name:
+        already_used: Имя уже используется
+        blank: Пожалуйста, укажите Имя
+        short: "[-Inf,Inf]Имя слишком короткое"
+        long: "[-Inf,Inf]Имя слишком длинное"
+    parent:
+        invalid: Неправильное значение

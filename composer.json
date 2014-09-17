@@ -1,0 +1,28 @@
+{
+    "name": "fdevs/menu-bundle",
+    "type": "symfony-bundle",
+    "description": "4devs MenuBundle for mongodb",
+    "keywords": ["menu", "mongodb"],
+    "homepage": "https://github.com/4devs/MenuBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrey Samusev",
+            "email": "andrey_simfi@list.ru",
+            "homepage": "http://andrey.4devs.io"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4",
+        "knplabs/knp-menu-bundle": "1.1.*",
+        "fdevs/page-bundle": "1.*",
+        "cocur/slugify": "~0.10"
+    },
+    "require-dev": {},
+    "suggest": {},
+    "autoload": {
+        "psr-0": {"FDevs\\MenuBundle": ""}
+    },
+    "target-dir": "FDevs/MenuBundle"
+}
