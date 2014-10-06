@@ -35,6 +35,10 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('menu_class')->defaultValue('FDevs\MenuBundle\Model\Menu')->cannotBeEmpty()->end()
                 ->scalarNode('manager_name')->defaultNull()->end()
+                ->arrayNode('default_route_parameters')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                ->end()
             ->end();
         $this->addAdminServiceNode($rootNode);
 

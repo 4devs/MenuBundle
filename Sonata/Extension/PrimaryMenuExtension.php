@@ -2,16 +2,21 @@
 
 namespace FDevs\MenuBundle\Sonata\Extension;
 
+use Doctrine\Common\Collections\Collection;
+use FDevs\MenuBundle\Model\Menu;
 use FDevs\MenuBundle\Model\MenuReferrersInterface;
 use FDevs\MenuBundle\Service\MenuManager;
 use Sonata\AdminBundle\Admin\AdminExtension;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 class PrimaryMenuExtension extends AdminExtension
 {
     /** @var MenuManager */
     private $menuManager;
+
+    private $defaultRouteParameters = [];
 
     /**
      * {@inheritDoc}
@@ -41,7 +46,7 @@ class PrimaryMenuExtension extends AdminExtension
     {
         /** @var \FDevs\MenuBundle\Model\Menu $menu */
         $menu = $this->menuManager->createMenu();
-        $menu->setContent($object);
+        $this->setContent($menu, $object);
         /** @var MenuReferrersInterface $object */
         $object->setPrimaryMenu($menu);
     }
@@ -68,7 +73,7 @@ class PrimaryMenuExtension extends AdminExtension
         $menuList = $object->getMenuList();
         foreach ($menuList as $menu) {
             if (!$menu->getId()) {
-                $menu->setContent($object);
+                $this->setContent($menu, $object);
                 $this->menuManager->persist($menu);
             }
         }
@@ -110,5 +115,34 @@ class PrimaryMenuExtension extends AdminExtension
         $this->menuManager = $manager;
 
         return $this;
+    }
+
+    /**
+     * @param array $defaultRouteParameters
+     *
+     * @return $this
+     */
+    public function setDefaultRouteParameters($defaultRouteParameters)
+    {
+        $this->defaultRouteParameters = $defaultRouteParameters;
+
+        return $this;
+    }
+
+    private function setContent(Menu $menu, $content)
+    {
+        $menu->setContent($content);
+        if ($content instanceof RouteReferrersReadInterface && $routes = $content->getRoutes()) {
+            $route = '';
+            if ($routes instanceof Collection) {
+                $route = $routes->first();
+            } elseif (is_array($routes)) {
+                $route = current($routes);
+            }
+            if ($route instanceof \FDevs\RoutingBundle\Doctrine\Mongodb\Route) {
+                $menu->setRoute($route->getName());
+                $menu->setRouteParameters(array_merge($route->getDefaults(), $this->defaultRouteParameters));
+            }
+        }
     }
 }

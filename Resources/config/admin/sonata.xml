@@ -12,6 +12,7 @@
 
         <service id="f_devs_menu.admin_extension.menu_node_referrers" class="%f_devs_menu.admin_extension.menu_reference.class%">
             <call method="setMenuManager"><argument type="service" id="f_devs_menu.menu_manager"/></call>
+            <call method="setDefaultRouteParameters"><argument>%f_devs_menu.default_route_parameters%</argument></call>
             <tag name="sonata.admin.extension"/>
         </service>
 

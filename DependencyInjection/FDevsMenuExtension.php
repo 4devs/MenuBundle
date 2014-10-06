@@ -25,6 +25,7 @@ class FDevsMenuExtension extends Extension
         $container->setParameter($this->getAlias() . '.manager_name', $config['manager_name']);
         $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
         $container->setParameter($this->getAlias() . '.menu_class', $config['menu_class']);
+        $container->setParameter($this->getAlias() . '.default_route_parameters', $config['default_route_parameters']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load($config['db_driver'] . '.xml');

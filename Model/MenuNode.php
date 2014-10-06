@@ -2,7 +2,6 @@
 
 namespace FDevs\MenuBundle\Model;
 
-
 class MenuNode extends MenuNodeBase
 {
     /** @var MenuNode */
