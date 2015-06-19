@@ -40,6 +40,19 @@ public function registerBundles()
     );
 }
 ```
+and add config
+
+``` yml
+f_devs_menu:
+    admin_service: 'sonata'
+    
+sonata_admin:
+    extensions:
+        f_devs_menu.admin_extension.menu_node_referrers:
+            implements:
+                - FDevs\MenuBundle\Model\MenuReferrersInterface
+```
+
 
 ### Step 3: Use the bundle
 
@@ -73,4 +86,10 @@ add doctrine mapping
     </mapped-superclass>
 
 </doctrine-mongo-mapping>
+```
+
+create menu `navbar` in database and show in twig
+
+```twig
+{{ knp_menu_render('navbar',{'depth':1,'currentAsLink': false, 'compressed':true}) }}
 ```
