@@ -4,6 +4,6 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <document name="FDevs\MenuBundle\Model\Menu" collection="menu" />
+    <document name="FDevs\MenuBundle\Model\Menu" collection="menu"/>
 
 </doctrine-mongo-mapping>

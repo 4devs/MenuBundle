@@ -2,7 +2,9 @@
 
 namespace FDevs\MenuBundle\Provider;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use FDevs\MenuBundle\Model\MenuNode;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,10 +13,14 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
 {
     /** @var FactoryInterface */
     protected $factory;
+
     /** @var ManagerRegistry */
     protected $objectManager;
+
     /** @var  Request */
     protected $request;
+
+    private $menu;
 
     /**
      * set Menu Factory
@@ -33,18 +39,14 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function get($name, array $options = array())
+    public function get($name, array $options = [])
     {
-        $menu = $this->find($name);
-
-        $menuItem = $this->factory->createFromNode($menu);
+        $menuItem = $this->find($name);
         if (empty($menuItem)) {
             throw new \InvalidArgumentException(
                 "Menu at '$name' is misconfigured (f.e. the route might be incorrect) and could therefore not be instanciated"
             );
         }
-
-        $menuItem->setCurrentUri($this->request->getRequestUri());
 
         return $menuItem;
     }
@@ -52,7 +54,7 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function has($name, array $options = array())
+    public function has($name, array $options = [])
     {
         return $this->find($name) != null;
     }
@@ -60,11 +62,30 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
     /**
      * @param $name
      *
-     * @return MenuNode
+     * @return Menu
      */
     protected function find($name)
     {
-        return $this->getRepository()->findOneBy(['name' => $name]);
+
+        $menuName = explode(':', $name);
+        $menu = null;
+        $name = isset($menuName[1]) ? $menuName[1] : $menuName[0];
+        if (!isset($this->menu[$menuName[0]])) {
+            $menuList = $this->getRepository()->findBy(['menuName' => $menuName[0]]);
+            $this->menu[$menuName[0]] = $menuList;
+        } else {
+            $menuList = $this->menu[$menuName[0]];
+        }
+        if (count($menuList)) {
+            $currentList = array_filter($menuList, function (MenuNode $menu) use ($name) {
+                return $name === $menu->getName();
+            });
+            if (count($currentList)) {
+                $menu = current($currentList);
+            }
+        }
+
+        return $menu;
     }
 
     /**

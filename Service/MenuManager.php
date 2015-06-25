@@ -4,11 +4,15 @@ namespace FDevs\MenuBundle\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FDevs\MenuBundle\Model\Menu;
+use FDevs\MenuBundle\Model\MenuNode;
+use Knp\Menu\ItemInterface;
+use Knp\Menu\MenuItem;
 
 class MenuManager
 {
     /** @var ObjectManager */
     private $manager;
+
     /** @var string */
     private $class;
 
@@ -53,11 +57,30 @@ class MenuManager
      *
      * @return Menu
      */
-    public function createMenu()
+    public function createMenu($name)
     {
         $class = $this->getClass();
+        /** @var Menu $menu */
+        $menu = new $class();
+        $menu->setMenuName($name);
+        $menu->setName($name);
 
-        return new $class();
+        return $menu;
+    }
+
+    /**
+     * @param MenuNode $item
+     * @param string   $name
+     *
+     * @return Menu
+     */
+    public function createChild(MenuNode $item, $name)
+    {
+        $menu = $this->createMenu($name);
+        $menu->setName($item->getName());
+        $item->addChild($menu);
+
+        return $menu;
     }
 
     /**

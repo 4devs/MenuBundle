@@ -45,11 +45,12 @@ trait MenuReferrersTrait
      */
     public function addMenu(MenuNode $menuNode)
     {
-        if (!$this->menuList) {
-            $this->menuList = new ArrayCollection();
-        }
-        $this->menuList->add($menuNode);
-
+        $menuNode->setContent($this);
+//        if (!$this->menuList) {
+//            $this->menuList = new ArrayCollection();
+//        }
+//        $this->menuList->add($menuNode);
+//
         return $this;
     }
 
@@ -68,11 +69,39 @@ trait MenuReferrersTrait
     /**
      * get Primary Menu
      *
+     * @param string $menuName
+     *
      * @return MenuNode|null
      */
-    public function getPrimaryMenu()
+    public function getPrimaryMenu($menuName = '')
     {
-        return $this->menuList ? $this->menuList->first() : null;
+        $primaryMenu = null;
+        if ($menuName) {
+            $menuList = $this->menuList->filter(function (MenuNode $menu) use ($menuName) {
+                return $menu->getMenuName() === $menuName;
+            });
+            if (count($menuList)) {
+                $primaryMenu = $menuList->first();
+            }
+        } elseif ($this->menuList) {
+            $primaryMenu = $this->menuList->first();
+        }
+
+        return $primaryMenu;
+    }
+
+    /**
+     * has menu
+     *
+     * @param string $menuName
+     *
+     * @return bool
+     */
+    public function hasMenu($menuName)
+    {
+        return $this->menuList->exists(function (MenuNode $menu) use ($menuName) {
+            return $menu->getMenuName() === $menuName;
+        });
     }
 
     /**

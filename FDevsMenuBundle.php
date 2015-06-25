@@ -22,14 +22,15 @@ class FDevsMenuBundle extends Bundle
      */
     private function addRegisterMappingsPass(ContainerBuilder $container)
     {
-        $mappings = [realpath(__DIR__ . '/Resources/config/doctrine/model') => 'FDevs\MenuBundle\Model'];
+        $mappings = [
+            realpath(__DIR__.'/Resources/config/doctrine/menu')  => 'Knp\Menu',
+            realpath(__DIR__.'/Resources/config/doctrine/model') => 'FDevs\MenuBundle\Model',
+        ];
 
         if (class_exists('Doctrine\Bundle\MongoDBBundle\DependencyInjection\Compiler\DoctrineMongoDBMappingsPass')) {
             $container->addCompilerPass(
                 DoctrineMongoDBMappingsPass::createXmlMappingDriver(
-                    $mappings,
-                    ['f_devs_menu.manager_name'],
-                    'f_devs_menu.backend_type_mongodb'
+                    $mappings, ['f_devs_menu.manager_name'], 'f_devs_menu.backend_type_mongodb'
                 )
             );
         }

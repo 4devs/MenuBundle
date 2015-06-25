@@ -5,9 +5,18 @@
                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <mapped-superclass name="FDevs\MenuBundle\Model\MenuNode">
+
+        <field name="id" fieldName="id" id="true"/>
         <field fieldName="linkType" type="string"/>
+        <field fieldName="menuName" type="string"/>
         <reference-one field="content"/>
-        <reference-one target-document="FDevs\MenuBundle\Model\Menu" simple="true" field="parent" inversed-by="children"/>
+
+        <indexes>
+            <index unique="true">
+                <key name="menuName"/>
+                <key name="name"/>
+            </index>
+        </indexes>
     </mapped-superclass>
 
 </doctrine-mongo-mapping>
