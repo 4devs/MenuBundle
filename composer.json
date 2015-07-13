@@ -2,27 +2,35 @@
     "name": "fdevs/menu-bundle",
     "type": "symfony-bundle",
     "description": "4devs MenuBundle for mongodb",
-    "keywords": ["menu", "mongodb"],
+    "keywords": [
+        "menu",
+        "mongodb"
+    ],
     "homepage": "https://github.com/4devs/MenuBundle",
     "license": "MIT",
     "authors": [
         {
-            "name": "Andrey Samusev",
-            "email": "andrey_simfi@list.ru",
-            "homepage": "http://andrey.4devs.io"
+            "name": "Samusev Andrey",
+            "email": "andrey@4devs.org",
+            "homepage": "http://andrey.4devs.io/"
+        },
+        {
+            "name": "4devs Community",
+            "homepage": "https://github.com/4devs/MenuBundle/contributors"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "knplabs/knp-menu-bundle": "1.1.*",
-        "fdevs/page-bundle": "1.*",
-        "cocur/slugify": "~0.10"
+        "knplabs/knp-menu-bundle": "~2.0",
+        "fdevs/locale-bundle": "~2.1",
+        "cocur/slugify": "~1.0"
     },
     "require-dev": {},
-    "suggest": {},
-    "autoload": {
-        "psr-0": {"FDevs\\MenuBundle": ""}
+    "suggest": {
+        "fdevs/routing-bundle": "use with mongodb routing",
+        "doctrine/doctrine-cache-bundle": "cached menu"
     },
-    "target-dir": "FDevs/MenuBundle"
+    "autoload": {
+        "psr-4": {"FDevs\\MenuBundle\\": ""}
+    }
 }

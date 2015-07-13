@@ -6,13 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 trait MenuReferrersTrait
 {
-    /** @var ArrayCollection */
+    /** @var ArrayCollection|Menu[] */
     protected $menuList;
 
     /**
      * get Menu List
      *
-     * @return MenuNode[]
+     * @return Menu[]
      */
     public function getMenuList()
     {
@@ -45,6 +45,7 @@ trait MenuReferrersTrait
      */
     public function addMenu(MenuNode $menuNode)
     {
+        $menuNode->setContent($this);
         if (!$this->menuList) {
             $this->menuList = new ArrayCollection();
         }
@@ -68,11 +69,39 @@ trait MenuReferrersTrait
     /**
      * get Primary Menu
      *
+     * @param string $menuName
+     *
      * @return MenuNode|null
      */
-    public function getPrimaryMenu()
+    public function getPrimaryMenu($menuName = '')
     {
-        return $this->menuList ? $this->menuList->first() : null;
+        $primaryMenu = null;
+        if ($menuName) {
+            $menuList = $this->menuList->filter(function (Menu $menu) use ($menuName) {
+                return $menu->getMenuName() === $menuName;
+            });
+            if (count($menuList)) {
+                $primaryMenu = $menuList->first();
+            }
+        } elseif ($this->menuList) {
+            $primaryMenu = $this->menuList->first();
+        }
+
+        return $primaryMenu;
+    }
+
+    /**
+     * has menu
+     *
+     * @param string $menuName
+     *
+     * @return bool
+     */
+    public function hasMenu($menuName)
+    {
+        return $this->menuList->exists(function ($key, Menu $menu) use ($menuName) {
+            return $menu->getMenuName() === $menuName;
+        });
     }
 
     /**
@@ -87,5 +116,4 @@ trait MenuReferrersTrait
 
         return $this;
     }
-
 }

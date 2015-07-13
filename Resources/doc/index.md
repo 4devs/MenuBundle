@@ -12,20 +12,10 @@ Installation and usage is a quick:
 
 ### Step 1: Download MenuBundle using composer
 
-Add MenuBundle in your composer.json:
-
-```js
-{
-    "require": {
-        "fdevs/menu-bundle": "*"
-    }
-}
-```
-
-Now tell composer to download the bundle by running the command:
+Tell composer to download the bundle by running the command:
 
 ``` bash
-$ php composer.phar update fdevs/menu-bundle
+$ php composer.phar require fdevs/menu-bundle
 ```
 
 Composer will install the bundle to your project's `vendor/fdevs` directory.
@@ -35,7 +25,7 @@ Composer will install the bundle to your project's `vendor/fdevs` directory.
 
 Enable the bundle in the kernel:
 
-``` php
+```php
 <?php
 // app/AppKernel.php
 
@@ -43,16 +33,44 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
+        new FDevs\LocaleBundle\FDevsLocaleBundle(),
+        new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+        
         new FDevs\MenuBundle\FDevsMenuBundle(),
     );
 }
 ```
-and add config
-
-``` yml
-f_devs_menu:
-    admin_service: 'sonata'
-```
-
 
 ### Step 3: Use the bundle
+
+add menu your page model
+
+```php
+<?php
+
+namespace AppBundle\Document;
+
+use FDevs\MenuBundle\Model\MenuReferrersInterface;
+use FDevs\MenuBundle\Model\MenuReferrersTrait;
+
+class Page extends BasePage implements MenuReferrersInterface
+{
+    use MenuReferrersTrait;
+}
+```
+
+add doctrine mapping
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <mapped-superclass name="AppBundle\Document\Page">
+        <reference-many target-document="FDevs\MenuBundle\Model\Menu" field="menuList" fieldName="menuList"/>
+    </mapped-superclass>
+
+</doctrine-mongo-mapping>
+```

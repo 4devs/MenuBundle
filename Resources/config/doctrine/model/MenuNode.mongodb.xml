@@ -5,9 +5,13 @@
                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <mapped-superclass name="FDevs\MenuBundle\Model\MenuNode">
-        <field fieldName="linkType" type="string"/>
+
+        <field fieldName="linkType" type="int"/>
+        <field name="routeAbsolute" type="boolean"/>
+        <field name="routeParameters" type="hash"/>
+        <reference-one field="route" target-document="FDevs\RoutingBundle\Doctrine\Mongodb\Route" simple="true"/>
         <reference-one field="content"/>
-        <reference-one target-document="FDevs\MenuBundle\Model\Menu" simple="true" field="parent" inversed-by="children"/>
+
     </mapped-superclass>
 
 </doctrine-mongo-mapping>

@@ -2,33 +2,43 @@
 
 namespace FDevs\MenuBundle\Model;
 
-class MenuNode extends MenuNodeBase
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Routing\Route;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\MenuItem;
+use FDevs\Locale\Model\LocaleText;
+
+class MenuNode extends MenuItem
 {
-    /** @var MenuNode */
-    protected $parent;
+    const LINK_AUTO = 1;
 
     /** @var mixed */
     protected $content;
 
-    /** @var string */
-    protected $linkType;
+    /** @var int */
+    protected $linkType = self::LINK_AUTO;
+
+    /** @var bool */
+    protected $routeAbsolute = false;
+
+    /** @var Route */
+    protected $route;
+
+    /** @var ArrayCollection|array|LocaleText[] */
+    protected $label;
+
+    /** @var array */
+    protected $routeParameters = [];
 
     /**
      * {@inheritDoc}
      */
-    public function setParentObject($parent)
+    public function __construct($name = '', FactoryInterface $factory = null)
     {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getParentObject()
-    {
-        return $this->parent;
+        $this->name = (string)$name;
+        $this->factory = $factory;
+        $this->label = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -64,19 +74,150 @@ class MenuNode extends MenuNodeBase
     }
 
     /**
-     * @return MenuNode
+     * is route absolute
+     *
+     * @return boolean
      */
-    public function getParent()
+    public function isRouteAbsolute()
     {
-        return $this->getParentObject();
+        return $this->routeAbsolute;
     }
 
     /**
-     * @param MenuNode $parent
+     * set route absolute
+     *
+     * @param boolean $routeAbsolute
+     *
+     * @return self
      */
-    public function setParent($parent)
+    public function setRouteAbsolute($routeAbsolute)
     {
-        $this->setParentObject($parent);
+        $this->routeAbsolute = $routeAbsolute;
+
+        return $this;
     }
 
+    /**
+     * get route parameters
+     *
+     * @return array
+     */
+    public function getRouteParameters()
+    {
+        return $this->routeParameters;
+    }
+
+    /**
+     * set route parameters
+     *
+     * @param array $routeParameters
+     *
+     * @return self
+     */
+    public function setRouteParameters($routeParameters)
+    {
+        $this->routeParameters = $routeParameters;
+
+        return $this;
+    }
+
+    /**
+     * get route
+     *
+     * @return Route
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * set route
+     *
+     * @param Route $route
+     *
+     * @return self
+     */
+    public function setRoute(Route $route)
+    {
+        $this->route = $route;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setName($name)
+    {
+        if ($this->name == $name) {
+            return $this;
+        }
+
+        $parent = $this->getParent();
+        if (null !== $parent && isset($parent[$name])) {
+            throw new \InvalidArgumentException('Cannot rename item, name is already used by sibling.');
+        }
+
+        $oldName = $this->name;
+        $this->name = $name;
+        if (null !== $parent) {
+            /** @var $child \Doctrine\ODM\MongoDB\PersistentCollection */
+            $child = $parent->getChildren();
+            $offset = $child->indexOf($this);
+            $child->set($offset, $this);
+
+            $parent->setChildren($child->getValues());
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function actsLikeLast()
+    {
+        // root items are never "marked" as last
+        if ($this->isRoot()) {
+            return false;
+        }
+
+        // A menu acts like last only if it is displayed
+        if (!$this->isDisplayed()) {
+            return false;
+        }
+
+        // if we're last and visible, we're last, period.
+        if ($this->isLast()) {
+            return true;
+        }
+
+        $children = $this->getParent()->getChildren();
+        foreach ($children as $child) {
+            // loop until we find a visible menu. If its this menu, we're first
+            if ($child->isDisplayed()) {
+                return $child->getName() === $this->getName();
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * copy
+     *
+     * @return MenuNode
+     */
+    public function copy()
+    {
+        $newMenu = clone $this;
+        $newMenu->setChildren([]);
+        $newMenu->setParent(null);
+        foreach ($this->getChildren() as $child) {
+            $newMenu->addChild($child->copy());
+        }
+
+        return $newMenu;
+    }
 }

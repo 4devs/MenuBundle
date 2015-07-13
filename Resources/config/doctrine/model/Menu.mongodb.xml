@@ -4,6 +4,18 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <document name="FDevs\MenuBundle\Model\Menu" collection="menu" />
+    <document name="FDevs\MenuBundle\Model\Menu" collection="menu">
+        <field name="id" fieldName="id" id="true"/>
+        <field fieldName="menuName" type="string"/>
+        <field fieldName="position" type="int"/>
+
+        <indexes>
+            <index unique="true">
+                <key name="menuName"/>
+                <key name="name"/>
+            </index>
+        </indexes>
+
+    </document>
 
 </doctrine-mongo-mapping>

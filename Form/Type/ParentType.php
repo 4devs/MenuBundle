@@ -3,7 +3,7 @@
 namespace FDevs\MenuBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ParentType extends AbstractType
 {
@@ -31,14 +31,12 @@ class ParentType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'class' => 'FDevs\MenuBundle\Model\Menu',
-                'required' => false,
-            ]
-        );
+        $resolver->setDefaults([
+            'class'    => 'FDevs\MenuBundle\Model\Menu',
+            'required' => false,
+        ]);
     }
 
     /**

@@ -3,13 +3,13 @@
 namespace FDevs\MenuBundle\Form\Type;
 
 use Cocur\Slugify\Slugify;
+use FDevs\Locale\Util\ChoiceText;
 use FDevs\MenuBundle\Model\Menu;
-use FDevs\PageBundle\Service\ChoiceText;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MenuNodeType extends AbstractType
 {
@@ -19,7 +19,7 @@ class MenuNodeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', 'translatable')
+            ->add('label', 'trans_text')
             ->add('parent', 'fdevs_menu_parent')
             ->add('display', 'checkbox', ['required' => false])
             ->add('name', 'text', ['required' => false])
@@ -28,8 +28,7 @@ class MenuNodeType extends AbstractType
                 function (FormEvent $event) {
                     $data = $event->getData();
                     if (empty($data['name']) && count($data['label'])) {
-                        $sl = new Slugify();
-                        $data['name'] = $sl->slugify(ChoiceText::getFirstText($data['label']));
+                        $data['name'] = Slugify::create()->slugify(ChoiceText::getFirstText($data['label']));
                         $event->setData($data);
                     }
                 }
@@ -39,9 +38,9 @@ class MenuNodeType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['data_class' => 'FDevs\MenuBundle\Model\Menu',]);
+        $resolver->setDefaults(['data_class' => 'FDevs\MenuBundle\Model\Menu']);
     }
 
     /**

@@ -27,13 +27,14 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('db_driver')
                     ->validate()
                     ->ifNotInArray($supportedDrivers)
-                    ->thenInvalid('The driver %s is not supported. Please choose one of ' . json_encode($supportedDrivers))
+                    ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
                     ->end()
                     ->cannotBeOverwritten()
                     ->defaultValue('mongodb')
                     ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('menu_class')->defaultValue('FDevs\MenuBundle\Model\Menu')->cannotBeEmpty()->end()
+                ->scalarNode('cache_provider')->defaultNull()->end()
                 ->scalarNode('manager_name')->defaultNull()->end()
                 ->arrayNode('default_route_parameters')
                     ->useAttributeAsKey('name')
@@ -62,10 +63,9 @@ class Configuration implements ConfigurationInterface
                 ->defaultNull()
                     ->validate()
                     ->ifNotInArray($supportedAdminService)
-                    ->thenInvalid('The admin service %s is not supported. Please choose one of ' . json_encode($supportedAdminService))
+                    ->thenInvalid('The admin service %s is not supported. Please choose one of '.json_encode($supportedAdminService))
                     ->end()
                 ->end()
             ->end();
     }
-
 }

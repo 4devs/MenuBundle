@@ -2,49 +2,40 @@
 
 namespace FDevs\MenuBundle\Provider;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Knp\Menu\FactoryInterface;
+use FDevs\MenuBundle\Model\Menu;
+use FDevs\MenuBundle\Doctrine\FactoryInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class MenuProvider extends DoctrineProvider implements MenuProviderInterface
+class MenuProvider implements MenuProviderInterface
 {
     /** @var FactoryInterface */
     protected $factory;
-    /** @var ManagerRegistry */
-    protected $objectManager;
+
     /** @var  Request */
     protected $request;
 
     /**
-     * set Menu Factory
+     * init.
      *
      * @param FactoryInterface $factory
-     *
-     * @return $this
      */
-    public function setFactory(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
-
-        return $this;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get($name, array $options = array())
+    public function get($name, array $options = [])
     {
-        $menu = $this->find($name);
-
-        $menuItem = $this->factory->createFromNode($menu);
+        $menuItem = $this->find($name);
         if (empty($menuItem)) {
             throw new \InvalidArgumentException(
                 "Menu at '$name' is misconfigured (f.e. the route might be incorrect) and could therefore not be instanciated"
             );
         }
-
-        $menuItem->setCurrentUri($this->request->getRequestUri());
 
         return $menuItem;
     }
@@ -52,7 +43,7 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function has($name, array $options = array())
+    public function has($name, array $options = [])
     {
         return $this->find($name) != null;
     }
@@ -60,11 +51,11 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
     /**
      * @param $name
      *
-     * @return MenuNode
+     * @return Menu
      */
     protected function find($name)
     {
-        return $this->getRepository()->findOneBy(['name' => $name]);
+        return $this->factory->findMenuByName($name);
     }
 
     /**
@@ -80,5 +71,4 @@ class MenuProvider extends DoctrineProvider implements MenuProviderInterface
 
         return $this;
     }
-
 }

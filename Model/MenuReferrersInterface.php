@@ -7,7 +7,7 @@ interface MenuReferrersInterface
     /**
      * set Menu List
      *
-     * @param MenuNode[] $menuList
+     * @param Menu[] $menuList
      *
      * @return self
      */
@@ -16,14 +16,14 @@ interface MenuReferrersInterface
     /**
      * get Menu List
      *
-     * @return MenuNode[]
+     * @return Menu[]
      */
     public function getMenuList();
 
     /**
      * get Primary Menu
      *
-     * @return MenuNode|null
+     * @return Menu|null
      */
     public function getPrimaryMenu();
 

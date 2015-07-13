@@ -6,7 +6,10 @@ use Symfony\Component\Validator\Constraint;
 
 class ContainsParent extends Constraint
 {
-    public $message = 'Pleas choice another field';
+    /** @var string */
+    public $message = 'Please choice another field';
+
+    /** @var string */
     public $field = 'id';
 
     /**
