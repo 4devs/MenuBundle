@@ -6,13 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 trait MenuReferrersTrait
 {
-    /** @var ArrayCollection */
+    /** @var ArrayCollection|Menu[] */
     protected $menuList;
 
     /**
      * get Menu List
      *
-     * @return MenuNode[]
+     * @return Menu[]
      */
     public function getMenuList()
     {
@@ -46,11 +46,11 @@ trait MenuReferrersTrait
     public function addMenu(MenuNode $menuNode)
     {
         $menuNode->setContent($this);
-//        if (!$this->menuList) {
-//            $this->menuList = new ArrayCollection();
-//        }
-//        $this->menuList->add($menuNode);
-//
+        if (!$this->menuList) {
+            $this->menuList = new ArrayCollection();
+        }
+        $this->menuList->add($menuNode);
+
         return $this;
     }
 
@@ -77,7 +77,7 @@ trait MenuReferrersTrait
     {
         $primaryMenu = null;
         if ($menuName) {
-            $menuList = $this->menuList->filter(function (MenuNode $menu) use ($menuName) {
+            $menuList = $this->menuList->filter(function (Menu $menu) use ($menuName) {
                 return $menu->getMenuName() === $menuName;
             });
             if (count($menuList)) {
@@ -99,7 +99,7 @@ trait MenuReferrersTrait
      */
     public function hasMenu($menuName)
     {
-        return $this->menuList->exists(function (MenuNode $menu) use ($menuName) {
+        return $this->menuList->exists(function ($key, Menu $menu) use ($menuName) {
             return $menu->getMenuName() === $menuName;
         });
     }
@@ -116,5 +116,4 @@ trait MenuReferrersTrait
 
         return $this;
     }
-
 }

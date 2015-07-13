@@ -31,6 +31,10 @@ class FDevsMenuExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load($config['db_driver'].'.xml');
         $loader->load('service.xml');
+        if ($config['cache_provider']) {
+            $container->setAlias('f_devs_menu.cache_provider', $config['cache_provider']);
+            $loader->load('cache.xml');
+        }
         if ($config['admin_service']) {
             $loader->load(sprintf('admin/%s.xml', $config['admin_service']));
         }
@@ -45,5 +49,4 @@ class FDevsMenuExtension extends Extension implements PrependExtensionInterface
         $config = ['twig' => ['template' => 'FDevsMenuBundle:Menu:base.html.twig']];
         $container->prependExtensionConfig('knp_menu', $config);
     }
-
 }

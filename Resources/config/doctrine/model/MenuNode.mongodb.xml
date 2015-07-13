@@ -6,17 +6,12 @@
 
     <mapped-superclass name="FDevs\MenuBundle\Model\MenuNode">
 
-        <field name="id" fieldName="id" id="true"/>
-        <field fieldName="linkType" type="string"/>
-        <field fieldName="menuName" type="string"/>
+        <field fieldName="linkType" type="int"/>
+        <field name="routeAbsolute" type="boolean"/>
+        <field name="routeParameters" type="hash"/>
+        <reference-one field="route" target-document="FDevs\RoutingBundle\Doctrine\Mongodb\Route" simple="true"/>
         <reference-one field="content"/>
 
-        <indexes>
-            <index unique="true">
-                <key name="menuName"/>
-                <key name="name"/>
-            </index>
-        </indexes>
     </mapped-superclass>
 
 </doctrine-mongo-mapping>

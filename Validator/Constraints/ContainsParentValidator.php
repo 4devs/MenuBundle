@@ -14,12 +14,11 @@ class ContainsParentValidator extends ConstraintValidator
     {
         /** @var \FDevs\MenuBundle\Model\Menu $object */
         $object = $this->context->getObject();
-        $method = 'get' . ucfirst($constraint->field);
+        $method = 'get'.ucfirst($constraint->field);
         if ($value && $object->{$method}() == $value->{$method}()) {
             $this->context
                 ->buildViolation($constraint->message)
                 ->addViolation();
         }
     }
-
 }

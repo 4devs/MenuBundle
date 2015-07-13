@@ -3,6 +3,7 @@
 namespace FDevs\MenuBundle;
 
 use Doctrine\Bundle\MongoDBBundle\DependencyInjection\Compiler\DoctrineMongoDBMappingsPass;
+use FDevs\MenuBundle\DependencyInjection\Compiler\AddExtensionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -15,6 +16,7 @@ class FDevsMenuBundle extends Bundle
     {
         parent::build($container);
         $this->addRegisterMappingsPass($container);
+        $container->addCompilerPass(new AddExtensionsPass());
     }
 
     /**

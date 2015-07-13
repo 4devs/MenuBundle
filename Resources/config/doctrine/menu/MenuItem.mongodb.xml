@@ -8,22 +8,22 @@
 
         <field name="name" type="string"/>
         <field name="uri" type="string"/>
-        <field name="route" type="string"/>
-        <field name="routeAbsolute" type="boolean"/>
         <field name="display" type="boolean"/>
         <field name="displayChildren" type="boolean"/>
         <field name="attributes" type="hash"/>
         <field name="childrenAttributes" type="hash"/>
         <field name="extras" type="hash"/>
-        <field name="routeParameters" type="hash"/>
         <field name="linkAttributes" type="hash"/>
         <field name="labelAttributes" type="hash"/>
 
-        <!--<embed-one target-document="FDevs\MenuBundle\Model\Menu" field="parent" fieldName="parent"/>-->
-        <!--<embed-many target-document="FDevs\MenuBundle\Model\Menu" field="children" fieldName="children"/>-->
         <embed-many target-document="FDevs\Locale\Model\LocaleText" field="label" fieldName="label"/>
         <reference-one target-document="FDevs\MenuBundle\Model\Menu" simple="true" field="parent" inversed-by="children"/>
-        <reference-many target-document="FDevs\MenuBundle\Model\Menu" simple="true" field="children" mapped-by="parent"/>
+
+        <reference-many target-document="FDevs\MenuBundle\Model\Menu" simple="true" field="children" mapped-by="parent">
+            <sort>
+                <sort field="position"/>
+            </sort>
+        </reference-many>
     </mapped-superclass>
 
 </doctrine-mongo-mapping>

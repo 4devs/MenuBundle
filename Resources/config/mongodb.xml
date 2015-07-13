@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="f_devs_menu.form_menu_parent.type">document</parameter>
+        <parameter key="f_devs_menu.event_listener.doctrine.class">FDevs\MenuBundle\EventListener\DoctrineListener</parameter>
     </parameters>
 
     <services>
@@ -13,5 +14,12 @@
                  class="Doctrine\ODM\MongoDB\DocumentManager" public="false">
             <argument>%f_devs_menu.manager_name%</argument>
         </service>
+
+        <service id="f_devs_menu.event_listener.doctrine" class="%f_devs_menu.event_listener.doctrine.class%">
+            <tag name="doctrine_mongodb.odm.event_listener" event="preUpdate"/>
+            <tag name="doctrine_mongodb.odm.event_listener" event="postUpdate"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
     </services>
 </container>
