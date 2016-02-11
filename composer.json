@@ -10,9 +10,13 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Samusev Andrey",
+            "name": "4devs company",
+            "homepage": "http://4devs.org"
+        },
+        {
+            "name": "Andrey Samusev",
             "email": "andrey@4devs.org",
-            "homepage": "http://andrey.4devs.io/"
+            "homepage": "http://andrey.4devs.io"
         },
         {
             "name": "4devs Community",
